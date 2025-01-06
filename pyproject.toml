@@ -1,0 +1,51 @@
+[project]
+name = "heyswiftie"
+version = "0.5.0"
+description = "Intelligent virtual assistant with persistent memory, RAG, and voice"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "Rahul Modugula"}]
+dependencies = [
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "openai>=1.10.0",
+    "chromadb>=0.4.22",
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.1.0",
+    "sqlalchemy>=2.0.25",
+    "httpx>=0.26.0",
+    "redis>=5.0.0",
+    "websockets>=12.0",
+    "rank-bm25>=0.2.2",
+    "sentence-transformers>=2.3.0",
+    "numpy>=1.26.0",
+]
+
+[project.optional-dependencies]
+voice = [
+    "faster-whisper>=0.10.0",
+    "piper-tts>=1.2.0",
+]
+local = [
+    "mlx>=0.5.0",
+    "mlx-lm>=0.5.0",
+]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.2.0",
+    "httpx>=0.26.0",
+    "coverage>=7.4.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
