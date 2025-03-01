@@ -1,0 +1,36 @@
+services:
+  swiftie:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - SWIFTIE_LLM_PROVIDER=ollama
+      - SWIFTIE_OLLAMA_BASE_URL=http://ollama:11434
+      - SWIFTIE_OLLAMA_MODEL=llama3:8b
+    depends_on:
+      - ollama
+      - redis
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  ollama_data:
