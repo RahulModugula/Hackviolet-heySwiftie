@@ -7,7 +7,7 @@ import logging
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import chat, voice, memory, knowledge, tasks, eval
+from app.api.routes import chat, voice, memory, knowledge, tasks, eval, search, features
 from app.api.websocket import ws_chat
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s | %(name)s | %(message)s")
@@ -28,7 +28,7 @@ app.add_middleware(
 )
 
 # REST routes
-for router in [chat.router, voice.router, memory.router, knowledge.router, tasks.router, eval.router]:
+for router in [chat.router, voice.router, memory.router, knowledge.router, tasks.router, eval.router, search.router, features.router]:
     app.include_router(router, prefix="/api")
 
 # WebSocket

@@ -98,3 +98,56 @@ knowledge_base = create_knowledge_base(
     chunk_size=settings.chunk_size,
     chunk_overlap=settings.chunk_overlap,
 )
+
+# --- NEW FEATURES (0.6.0) ---
+# Redis cache
+from app.core.cache import RedisCache, RateLimiter
+
+redis_cache = RedisCache(settings.redis_url)
+rate_limiter = RateLimiter(redis_cache, max_requests=100, window_seconds=60)
+
+# Conversation search
+from app.core.search import ConversationSearcher
+
+conversation_searcher = ConversationSearcher(conversation_store)
+
+# Export service
+from app.core.export import ExportService
+
+export_service = ExportService(conversation_store, memory_manager)
+
+# Summarization
+from app.core.summarization import ConversationSummarizer
+
+summarizer = ConversationSummarizer(conversation_store)
+
+# Mood tracking
+from app.core.mood_tracker import MoodTracker
+
+mood_tracker = MoodTracker(conversation_store)
+
+# Habit tracking
+from app.core.habits import HabitTracker
+
+habit_tracker = HabitTracker(suggestion_engine)
+
+# Plugin system
+from app.core.plugins import PluginManager
+
+plugin_manager = PluginManager(plugins_dir="./plugins")
+plugin_manager.load_plugins(tool_registry)
+
+# Reminders
+from app.core.reminders import ReminderEngine
+
+reminder_engine = ReminderEngine(task_manager, suggestion_engine)
+
+# Knowledge graph
+from app.core.knowledge_graph import KnowledgeGraph
+
+knowledge_graph = KnowledgeGraph(memory_manager)
+
+# Context pruning
+from app.core.context_pruning import ContextPruner
+
+context_pruner = ContextPruner(context_window=settings.context_window)
