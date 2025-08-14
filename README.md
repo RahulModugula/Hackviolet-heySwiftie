@@ -13,8 +13,14 @@ Started at [HackViolet 2024](https://hackviolet.org/). Rebuilt from the ground u
 - **Runs locally** — Ollama or MLX (Apple Silicon) for full on-device privacy
 - **Smart retrieval** — hybrid BM25 + vector search with cross-encoder reranking
 - **Proactive** — suggests tasks, follow-ups, and reminders based on patterns
-- **Tool use** — calculator, web search, time, extensible function calling
+- **Tool use** — calculator, web search, time, extensible function calling & plugins
+- **Search** — full-text conversation search with relevance ranking
+- **Mood tracking** — analyzes sentiment patterns over time
+- **Habit detection** — identifies recurring topics and patterns
+- **Export/backup** — JSON export of all conversations and memories
+- **Knowledge graph** — relationship mapping between facts
 - **iOS app** — SwiftUI client with voice button and streaming responses
+- **MCP server** — IDE integration for Claude, Cursor, etc.
 
 ---
 
@@ -83,19 +89,47 @@ SWIFTIE_LLM_PROVIDER=mlx uvicorn app.main:app --reload
 
 ## API
 
+**Core**
 | Endpoint | Description |
 |---|---|
 | `POST /api/chat/` | Send a message, get a reply |
 | `WS /ws/chat` | Streaming token-by-token response |
+| `GET /api/chat/sessions` | List all sessions |
+| `GET /api/chat/sessions/{id}/history` | Get conversation history |
+
+**Voice**
 | `POST /api/voice/transcribe` | Audio → text (Whisper) |
 | `POST /api/voice/synthesize` | Text → audio (Piper TTS) |
 | `POST /api/voice/chat` | Full voice round-trip |
+
+**Memory & Knowledge**
 | `GET /api/memory/facts` | What Swiftie knows about you |
 | `GET /api/memory/recall?q=...` | Search memories |
+| `POST /api/memory/consolidate` | Prune old low-importance memories |
 | `POST /api/knowledge/ingest` | Add PDF/URL/notes to knowledge base |
+| `GET /api/knowledge/stats` | Knowledge base statistics |
+
+**Tasks & Suggestions**
 | `GET /api/tasks/` | List tasks |
 | `POST /api/tasks/` | Create task (supports natural language) |
+| `PATCH /api/tasks/{id}/complete` | Mark task done |
 | `GET /api/tasks/suggestions` | Proactive suggestions |
+| `GET /api/tasks/overdue` | Overdue tasks |
+
+**v0.6.0 Features**
+| `POST /api/search/conversations` | Full-text search across conversations |
+| `GET /api/search/sessions/{id}/summary` | Session summary |
+| `GET /api/features/mood/{session_id}` | Mood analysis |
+| `GET /api/features/mood/timeline` | Mood trends |
+| `GET /api/features/habits` | Detected habits and patterns |
+| `GET /api/features/reminders` | Smart reminders |
+| `GET /api/features/daily-digest` | Daily activity digest |
+| `POST /api/features/export/session/{id}` | Export session |
+| `GET /api/features/export/all` | Export everything |
+| `GET /api/features/plugins` | List loaded plugins |
+
+**Evaluation**
+| `POST /api/eval/sample` | Add evaluation sample |
 | `GET /api/eval/metrics` | Retrieval quality metrics |
 
 ---
@@ -170,13 +204,43 @@ Set `SWIFTIE_PRIVACY_MODE=true` to force all processing on-device:
 
 ---
 
-## Roadmap
+## New in v0.6.0
+
+**Conversation Analytics**
+- Full-text search with relevance ranking
+- Conversation summarization (extractive)
+- Mood tracking with sentiment analysis over time
+- Habit detection from recurring topics
+
+**Data Management**
+- JSON export/backup of all conversations and memories
+- Redis-backed caching layer
+- Rate limiting for API protection
+
+**Advanced Features**
+- Knowledge graph with fact relationships
+- Multi-hop memory recall via graph traversal
+- Plugin system for custom tools
+- Smart reminders based on context
+- Smart context window pruning
+- MCP server for IDE integration
+
+**Developer Experience**
+- Comprehensive test suite (search, cache, export, etc.)
+- Seed knowledge script for bulk ingestion
+- Daily digest endpoint
+
+---
+
+## Future Roadmap
 
 - [ ] Multi-modal memory (screenshots, images)
 - [ ] Calendar integration (EventKit on iOS)
 - [ ] Conversation branching / exploration
 - [ ] Memory sharing across devices (CloudKit)
 - [ ] Fine-tuning on personal data
+- [ ] Long-context compression
+- [ ] Agent delegation patterns
 
 ---
 
